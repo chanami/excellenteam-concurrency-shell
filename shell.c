@@ -4,21 +4,23 @@
 #include <string.h>
 #include <sys/wait.h>
 
-#define MAX_NUMBER_OF_PARAMS 10
 
-void parse_command(char *line, char ** argv){
-    /*int i;
-    if((argv==NULL) || (*argv==NULL))
-        return;
-    i=0;
-    argv[i] = strtok( line, '\0' );
-    while(argv[i] != NULL  )
+void parseCommand(char *line, char ** argv){
+
+    const char delim[]={'\t','\n',' '};
+    int i;
+    i= 0;
+
+    argv[i] = strtok(line, " ");
+
+    while(argv[i] != NULL)
     {
-        argv[++i] = strtok( NULL, '\0' );
+        argv[++i]= strtok(NULL, delim);
     }
-*/
+    if(line[strlen(line - 1)] == '\n')
+        line[strlen(line - 1)] = '\0';
 
-    while (*line != '\0')
+    /*while (*line != '\0')
     {
         while (*line == ' ' || *line == '\t' || *line == '\n')
             *line++ = '\0';
@@ -31,7 +33,9 @@ void parse_command(char *line, char ** argv){
             line++;
     }
 
-    *argv = '\0';
+    *argv = '\0';*/
+
+
 }
 int main()
 {
@@ -40,9 +44,9 @@ int main()
     char  *argv[10];
 
     while(1) {
-
         fgets(line, sizeof(line), stdin);
-        parse_command(line, argv);
+
+        parseCommand(line, argv);
 
         if ((pid = fork()) == -1)
         {
@@ -51,6 +55,7 @@ int main()
         }
         if (pid == 0)
         {
+
             if (execvp(*argv, argv) < 0)
             {
                 printf("*** ERROR: exec failed\n");
